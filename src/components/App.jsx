@@ -45,9 +45,11 @@ function App() {
         />
         <Footer />
         <PopupWithForm
+          formName={"formEdit"}
           onClose={closeAllPopups}
           isOpen={isEditProfilePopupOpen}
           title={"Редактировать профиль"}
+          buttonText={"Сохранить"}
           name={"edit"}
           children={
             <>
@@ -73,21 +75,17 @@ function App() {
                 required
               />
               <span className="error userInfo-error"></span>
-              <button
-                type="submit"
-                className="popup__button"
-                id="buttonSaveEdit"
-              >
-                Сохранить
-              </button>
             </>
           }
         />
         <PopupWithForm
+          formName={"formAdd"}
           onClose={closeAllPopups}
           isOpen={isAddPlacePopupOpen}
+          text={"Создать"}
           title={"Новое место"}
           name={"add"}
+          buttonText={"Создать"}
           children={
             <>
               <input
@@ -110,17 +108,16 @@ function App() {
                 required
               />
               <span className="error link-error"></span>
-              <button type="submit" class="popup__button" id="buttonCreate">
-                Создать
-              </button>
             </>
           }
         />
         <PopupWithForm
+          formName={"formAvatar"}
           onClose={closeAllPopups}
           isOpen={isEditAvatarPopupOpen}
           title={"Обновить Аватар"}
           name={"avatar-edit"}
+          buttonText={"Обновить"}
           children={
             <>
               <input
@@ -131,31 +128,16 @@ function App() {
                 id="avatarLink"
                 required
               />
-              <span class="error avatarLink-error"></span>
-              <button
-                type="submit"
-                className="popup__button popup__button_type_avatar"
-                id="buttonSaveAvatar"
-              >
-                Сохранить
-              </button>
+              <span className="error avatarLink-error"></span>
             </>
           }
         />
         <PopupWithForm
+          formName={"formDelete"}
           title={"Вы уверены?"}
           name={"delete"}
-          children={
-            <>
-              <button
-                type="submit"
-                className="popup__button"
-                id="buttonCreateDelete"
-              >
-                Да
-              </button>
-            </>
-          }
+          buttonText={"Да"}
+          children={<></>}
         />
         <ImagePopup
           card={selectedCard}
