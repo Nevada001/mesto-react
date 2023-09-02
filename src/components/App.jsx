@@ -5,7 +5,7 @@ import { api } from "../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import { useEffect, useState } from "react";
-import { Context} from "../contexts/CurrentUserContext";
+import { ContextUser } from "../contexts/CurrentUserContext";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -13,6 +13,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState("");
+  
 
   useEffect(() => {
     api
@@ -50,7 +51,7 @@ function App() {
   }
 
   return (
-    <Context.Provider value={currentUser}>
+    <ContextUser.Provider value={currentUser}>
       <div className="root">
         <div className="page">
           <Header />
@@ -163,7 +164,7 @@ function App() {
           />
         </div>
       </div>
-    </Context.Provider>
+    </ContextUser.Provider>
   );
 }
 

@@ -1,8 +1,12 @@
+import { ContextUser } from "../contexts/CurrentUserContext";
+import React from "react";
 export default function Card({ card, onCardClick }) {
   function handleClick() {
     onCardClick(card);
   }
 
+  const CurrentUserContext = React.useContext(ContextUser);
+  const isOwn = card.owner._id === CurrentUserContext._id
   return (
     <li className="card">
       <img
@@ -11,7 +15,7 @@ export default function Card({ card, onCardClick }) {
         className="card__image"
         alt={card.name}
       />
-      <button type="reset" className="card__delete" id="delete"></button>
+      {isOwn && <button type="reset" className="card__delete" id="delete"/> }
       <div className="card__container">
         <h2 className="card__name">{card.name}</h2>
         <div className="card__heart-container">

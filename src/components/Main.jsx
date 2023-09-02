@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { api } from "../utils/Api";
 import Card from "./Card";
-import { Context } from "../contexts/CurrentUserContext";
+import {  ContextUser } from "../contexts/CurrentUserContext";
+import  {useEffect, useState } from "react";
 import React from "react";
 
 export default function Main({
@@ -10,17 +10,19 @@ export default function Main({
   onEditAvatar,
   onCardClick,
 }) {
-  const [cards, setCards] = useState([]);
-  const CurrentUserContext = React.useContext(Context);
-  console.log(CurrentUserContext)
   
 
+  const [cards, setCards] = useState([])
+  const CurrentUserContext = React.useContext(ContextUser);
+  console.log(cards)
+  
   useEffect(() => {
     api
       .getInitialCards()
-      .then((data) => {
-        setCards(data);
+      .then((cards) => {
+        setCards(cards)
       })
+
       .catch((err) => {
         console.log(`Sorry, ${err}`);
       });
