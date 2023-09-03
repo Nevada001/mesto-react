@@ -1,33 +1,22 @@
-import { api } from "../utils/Api";
+
 import Card from "./Card";
 import {  ContextUser } from "../contexts/CurrentUserContext";
-import  {useEffect, useState } from "react";
+
 import React from "react";
 
 export default function Main({
+  onCardDelete,
+  onCardLike,
+  cards,
   onEditProfile,
   onAddPlace,
   onEditAvatar,
   onCardClick,
 }) {
-  
-
-  const [cards, setCards] = useState([])
-  const CurrentUserContext = React.useContext(ContextUser);
   console.log(cards)
+  const CurrentUserContext = React.useContext(ContextUser);
   
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((cards) => {
-        setCards(cards)
-      })
-
-      .catch((err) => {
-        console.log(`Sorry, ${err}`);
-      });
-  }, []);
-
+  
   return (
     <main className="content">
       <section className="profile">
@@ -60,7 +49,7 @@ export default function Main({
       <section className="elements">
         <ul className="cards">
           {cards.map((card) => (
-            <Card card={card} key={card._id} onCardClick={onCardClick} />
+            <Card card={card} key={card._id} onCardDelete={onCardDelete} onCardLike={onCardLike} onCardClick={onCardClick} />
           ))}
         </ul>
       </section>

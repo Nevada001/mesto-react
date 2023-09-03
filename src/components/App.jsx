@@ -13,19 +13,50 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState("");
-  
+  const [cards, setCards] = useState([]);
 
   useEffect(() => {
     api
       .getUserInfo()
       .then((userData) => {
-        setCurrentUser(userData)
+        setCurrentUser(userData);
+      })
+
+      .catch((err) => {
+        console.log(`Sorry, ${err}`);
+      });
+    api
+      .getInitialCards()
+      .then((cards) => {
+        setCards(cards);
       })
 
       .catch((err) => {
         console.log(`Sorry, ${err}`);
       });
   }, []);
+
+  function handleCardDelete(card) {
+    api.removeCard(card).then(() => {
+      setCards((state) => state.filter((newCard) => card._id !== newCard._id));
+    })
+    .catch((err) => {
+      console.log(`Sorry, ${err}`);
+    });
+  }
+
+  function handleCardLike(card) {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+    })
+    .catch((err) => {
+      console.log(`Sorry, ${err}`);
+    });
+  }
 
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
@@ -56,6 +87,9 @@ function App() {
         <div className="page">
           <Header />
           <Main
+            cards={cards}
+            onCardDelete={handleCardDelete}
+            onCardLike={handleCardLike}
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
             onEditAvatar={handleEditAvatarClick}

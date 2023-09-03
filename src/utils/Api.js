@@ -48,16 +48,9 @@
       .then(this._validateRes)
   }
 
-  addLike(cardItem) {
-    return fetch(`${this._baseUrl}/cards/${cardItem._id}/likes`, {
-      method: "PUT",
-      headers: this._headers,
-    })
-      .then(this._validateRes)
-  }
-  removeLike(cardItem) {
-    return fetch(`${this._baseUrl}/cards/${cardItem._id}/likes`, {
-      method: "DELETE",
+  changeLikeCardStatus(cardItem, isLike) {
+    return fetch(`${this._baseUrl}/cards/${cardItem}/likes`, {
+      method: isLike ? 'PUT' : 'DELETE',
       headers: this._headers,
     })
       .then(this._validateRes)
