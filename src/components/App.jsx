@@ -7,6 +7,7 @@ import ImagePopup from "./ImagePopup";
 import { useEffect, useState } from "react";
 import { ContextUser } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -51,6 +52,17 @@ function App() {
   function handleCardDelete(card) {
     api.removeCard(card).then(() => {
       setCards((state) => state.filter((newCard) => card._id !== newCard._id));
+    })
+    .catch((err) => {
+      console.log(`Sorry, ${err}`);
+    });
+  }
+
+  function handleUpdateAvatar(currentUser) {
+    api.changeUserAvatar(currentUser.avatar) 
+    .then((userData) => {
+      setCurrentUser(userData);
+      closeAllPopups();
     })
     .catch((err) => {
       console.log(`Sorry, ${err}`);
@@ -113,6 +125,7 @@ function App() {
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
           />
+
           <PopupWithForm
             formName={"formAdd"}
             onClose={closeAllPopups}
@@ -146,26 +159,10 @@ function App() {
               </>
             }
           />
-          <PopupWithForm
-            formName={"formAvatar"}
+          <EditAvatarPopup
+            onUpdateAvatar={handleUpdateAvatar}
             onClose={closeAllPopups}
             isOpen={isEditAvatarPopupOpen}
-            title={"Обновить Аватар"}
-            name={"avatar-edit"}
-            buttonText={"Обновить"}
-            children={
-              <>
-                <input
-                  className="popup__input"
-                  type="url"
-                  placeholder="Ссылка на картинку"
-                  name="input"
-                  id="avatarLink"
-                  required
-                />
-                <span className="error avatarLink-error"></span>
-              </>
-            }
           />
           <PopupWithForm
             formName={"formDelete"}
