@@ -5,7 +5,7 @@ import { api } from "../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import { useEffect, useState } from "react";
-import { ContextUser } from "../contexts/CurrentUserContext";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import Card from "./Card";
@@ -38,7 +38,7 @@ function App() {
       .catch((err) => {
         console.log(`Sorry, ${err}`);
       });
-  }, []);
+  }, [] );
 
   function handleUpdateUser(currentUser) {
     api.setUserInfo(currentUser.name, currentUser.about)
@@ -119,7 +119,7 @@ function App() {
   }
 
   return (
-    <ContextUser.Provider value={currentUser}>
+    <CurrentUserContext.Provider value={currentUser}>
       <div className="root">
         <div className="page">
           <Header />
@@ -162,7 +162,7 @@ function App() {
           />
         </div>
       </div>
-    </ContextUser.Provider>
+    </CurrentUserContext.Provider>
   );
 }
 

@@ -1,5 +1,5 @@
 
-import {  ContextUser } from "../contexts/CurrentUserContext";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 import React from "react";
 
@@ -10,12 +10,9 @@ export default function Main({
   onEditProfile,
   onAddPlace,
   onEditAvatar,
-  onCardClick,
 }) {
-  console.log(cards)
-  const CurrentUserContext = React.useContext(ContextUser);
-  
-  
+  const currentUser = React.useContext(CurrentUserContext);
+
   return (
     <main className="content">
       <section className="profile">
@@ -27,17 +24,17 @@ export default function Main({
           <img
             className="profile__avatar"
             alt="Аватар профиля"
-            src={CurrentUserContext.avatar}
+            src={currentUser.avatar}
           />
         </button>
         <div className="profile__info">
-          <h1 className="profile__title">{CurrentUserContext.name}</h1>
+          <h1 className="profile__title">{currentUser.name}</h1>
           <button
             type="button"
             onClick={onEditProfile}
             className="profile__button-edit"
           ></button>
-          <p className="profile__info-text">{CurrentUserContext.about}</p>
+          <p className="profile__info-text">{currentUser.about}</p>
         </div>
         <button
           type="button"
@@ -47,7 +44,7 @@ export default function Main({
       </section>
       <section className="elements">
         <ul className="cards">
-        cards={cards}
+        {cards}
         onCardLike={onCardLike}
         onCardDelete={onCardDelete}
         </ul>

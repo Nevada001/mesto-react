@@ -1,34 +1,33 @@
 import { useEffect, useState } from "react";
 import PopupWithForm from "./PopupWithForm";
-import { ContextUser } from "../contexts/CurrentUserContext";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import React from "react";
 
-export default function EditProfilePopup( {onUpdateUser, onClose, isOpen}) {
-  const currentUser = React.useContext(ContextUser);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+export default function EditProfilePopup({ onUpdateUser, onClose, isOpen }) {
+  const currentUser = React.useContext(CurrentUserContext);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     setName(currentUser.name);
-    setDescription(currentUser.about)
-  }, [currentUser])
+    setDescription(currentUser.about);
+  }, [currentUser, isOpen]);
 
   function handleChangeName(e) {
-    setName(e.target.value)
+    setName(e.target.value);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     onUpdateUser({
       name,
-      about: description
-    })
+      about: description,
+    });
   }
 
   function handleChangeDescription(e) {
-    setDescription(e.target.value)
+    setDescription(e.target.value);
   }
-
 
   return (
     <PopupWithForm
@@ -46,7 +45,7 @@ export default function EditProfilePopup( {onUpdateUser, onClose, isOpen}) {
             minLength="2"
             maxLength="40"
             placeholder="Имя"
-            value={name}
+            value={name || ""}
             onChange={handleChangeName}
             type="text"
             name="input"
@@ -60,7 +59,7 @@ export default function EditProfilePopup( {onUpdateUser, onClose, isOpen}) {
             maxLength="200"
             placeholder="Вид деятельности"
             onChange={handleChangeDescription}
-            value={description}
+            value={description || ""}
             type="text"
             name="input"
             id="userInfo"

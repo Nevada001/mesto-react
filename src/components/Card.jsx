@@ -1,4 +1,4 @@
-import { ContextUser } from "../contexts/CurrentUserContext";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import React from "react";
 export default function Card({onCardLike, onCardDelete, card, onCardClick }) {
   function handleClick() {
@@ -12,10 +12,10 @@ export default function Card({onCardLike, onCardDelete, card, onCardClick }) {
   function handleLikeClick() {
     onCardLike(card);
   }
-  const CurrentUserContext = React.useContext(ContextUser);
-  const isLike = card.likes.some(like => like._id === CurrentUserContext._id);
+  const currentUser = React.useContext(CurrentUserContext);
+  const isLike = card.likes.some(like => like._id === currentUser._id);
   const cardHeartButtonClassName = (`card__heart ${isLike && 'card__heart_active'}`)
-  const isOwn = card.owner._id === CurrentUserContext._id;
+  const isOwn = card.owner._id === currentUser._id;
 
   return (
     <li className="card">

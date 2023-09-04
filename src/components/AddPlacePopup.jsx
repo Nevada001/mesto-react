@@ -3,8 +3,8 @@ import PopupWithForm from "./PopupWithForm";
 
 export default function AddPlacePopup({onAddPlace, isOpen, onClose}) {
   
-  const [name, setName] = useState('');
-  const [link, setLink] = useState('');
+  const [name, setName] = useState();
+  const [link, setLink] = useState();
 
   function handleChangeName(e) {
     setName(e.target.value)
@@ -35,7 +35,7 @@ export default function AddPlacePopup({onAddPlace, isOpen, onClose}) {
     children={
       <>
         <input
-          value={name}
+          value={name || ''}
           onChange={handleChangeName}
           className="popup__input"
           minLength="2"
@@ -48,7 +48,7 @@ export default function AddPlacePopup({onAddPlace, isOpen, onClose}) {
         />
         <span className="error placeName-error"></span>
         <input
-          value={link}
+          value={link || ''}
           onChange={handleChangeLink}
           className="popup__input"
           type="url"
