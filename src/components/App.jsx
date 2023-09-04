@@ -6,13 +6,14 @@ import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import { useEffect, useState } from "react";
 import { ContextUser } from "../contexts/CurrentUserContext";
+import EditProfilePopup from "./EditProfilePopup";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [currentUser, setCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState('');
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
@@ -35,6 +36,17 @@ function App() {
         console.log(`Sorry, ${err}`);
       });
   }, []);
+
+  function handleUpdateUser(currentUser) {
+    api.setUserInfo(currentUser.name, currentUser.about)
+    .then((userData) => {
+      setCurrentUser(userData);
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(`Sorry, ${err}`);
+    });
+  }
 
   function handleCardDelete(card) {
     api.removeCard(card).then(() => {
@@ -96,39 +108,10 @@ function App() {
             onCardClick={handleCardClick}
           />
           <Footer />
-          <PopupWithForm
-            formName={"formEdit"}
-            onClose={closeAllPopups}
+          <EditProfilePopup
+            onUpdateUser={handleUpdateUser}
             isOpen={isEditProfilePopupOpen}
-            title={"Редактировать профиль"}
-            buttonText={"Сохранить"}
-            name={"edit"}
-            children={
-              <>
-                <input
-                  className="popup__input"
-                  minLength="2"
-                  maxLength="40"
-                  placeholder="Имя"
-                  type="text"
-                  name="input"
-                  id="userName"
-                  required
-                />
-                <span className="error userName-error"></span>
-                <input
-                  className="popup__input"
-                  minLength="2"
-                  maxLength="200"
-                  placeholder="Вид деятельности"
-                  type="text"
-                  name="input"
-                  id="userInfo"
-                  required
-                />
-                <span className="error userInfo-error"></span>
-              </>
-            }
+            onClose={closeAllPopups}
           />
           <PopupWithForm
             formName={"formAdd"}

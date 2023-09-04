@@ -1,4 +1,5 @@
 export default function PopupWithForm({
+  onSubmit,
   title,
   name,
   children,
@@ -8,7 +9,7 @@ export default function PopupWithForm({
   formName
 }) {
   return (
-    <div className={`popup popup_${name} ${isOpen && "popup_opened"}`}>
+    <div  className={`popup popup_${name} ${isOpen && "popup_opened"}`}>
       <div className="popup__container">
         <button
           onClick={onClose}
@@ -17,6 +18,7 @@ export default function PopupWithForm({
           id="editclose"
         ></button>
         <form
+        onSubmit={onSubmit}
           className={`popup__form popup__form_type_${name}`}
           name={formName}
           noValidate
