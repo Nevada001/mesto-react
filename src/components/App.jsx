@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { ContextUser } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import Card from "./Card";
+import AddPlacePopup from "./AddPlacePopup";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -82,6 +84,17 @@ function App() {
     });
   }
 
+  function handleAddPlaceSubmit(card) {
+    api.addNewCard(card.name, card.link)
+    .then((newCard) => {
+      setCards([newCard, ...cards]);
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(`Sorry, ${err}`);
+    });
+  }
+
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -111,13 +124,12 @@ function App() {
         <div className="page">
           <Header />
           <Main
-            cards={cards}
-            onCardDelete={handleCardDelete}
-            onCardLike={handleCardLike}
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
             onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
+            cards={cards.map((card) => (
+              <Card card={card} key={card._id} onCardDelete={handleCardDelete} onCardLike={handleCardLike} onCardClick={handleCardClick}  />
+            ))}
           />
           <Footer />
           <EditProfilePopup
@@ -126,38 +138,10 @@ function App() {
             onClose={closeAllPopups}
           />
 
-          <PopupWithForm
-            formName={"formAdd"}
+          <AddPlacePopup
+            onAddPlace={handleAddPlaceSubmit}
             onClose={closeAllPopups}
             isOpen={isAddPlacePopupOpen}
-            text={"Создать"}
-            title={"Новое место"}
-            name={"add"}
-            buttonText={"Создать"}
-            children={
-              <>
-                <input
-                  className="popup__input"
-                  minLength="2"
-                  maxLength="30"
-                  placeholder="Название"
-                  type="text"
-                  name="input"
-                  id="placeName"
-                  required
-                />
-                <span className="error placeName-error"></span>
-                <input
-                  className="popup__input"
-                  type="url"
-                  placeholder="Ссылка на картинку"
-                  name="input"
-                  id="link"
-                  required
-                />
-                <span className="error link-error"></span>
-              </>
-            }
           />
           <EditAvatarPopup
             onUpdateAvatar={handleUpdateAvatar}

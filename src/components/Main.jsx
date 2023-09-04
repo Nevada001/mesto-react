@@ -1,5 +1,4 @@
 
-import Card from "./Card";
 import {  ContextUser } from "../contexts/CurrentUserContext";
 
 import React from "react";
@@ -48,9 +47,9 @@ export default function Main({
       </section>
       <section className="elements">
         <ul className="cards">
-          {cards.map((card) => (
-            <Card card={card} key={card._id} onCardDelete={onCardDelete} onCardLike={onCardLike} onCardClick={onCardClick} />
-          ))}
+        cards={cards}
+        onCardLike={onCardLike}
+        onCardDelete={onCardDelete}
         </ul>
       </section>
     </main>
