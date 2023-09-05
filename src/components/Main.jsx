@@ -45,8 +45,6 @@ export default function Main({
       <section className="elements">
         <ul className="cards">
         {cards}
-        onCardLike={onCardLike}
-        onCardDelete={onCardDelete}
         </ul>
       </section>
     </main>

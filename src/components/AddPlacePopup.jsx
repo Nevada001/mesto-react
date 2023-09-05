@@ -3,8 +3,8 @@ import PopupWithForm from "./PopupWithForm";
 
 export default function AddPlacePopup({onAddPlace, isOpen, onClose}) {
   
-  const [name, setName] = useState();
-  const [link, setLink] = useState();
+  const [name, setName] = useState('');
+  const [link, setLink] = useState('');
 
   function handleChangeName(e) {
     setName(e.target.value)
