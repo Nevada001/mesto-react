@@ -1,0 +1,8 @@
+.header__caption {
+  margin: 0;
+}
+
+.header__caption:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}

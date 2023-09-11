@@ -4,8 +4,6 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import React from "react";
 
 export default function Main({
-  onCardDelete,
-  onCardLike,
   cards,
   onEditProfile,
   onAddPlace,

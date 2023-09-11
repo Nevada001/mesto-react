@@ -1,8 +1,12 @@
 import { useRef } from "react";
 import PopupWithForm from "./PopupWithForm";
+import { useContext } from "react";
+import { AppContext } from "../contexts/CurrentUserContext";
 
 export default function EditAvatarPopup({ onUpdateAvatar, isOpen, onClose }) {
   const avatarRef = useRef("");
+
+  const isLoading = useContext(AppContext);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -20,7 +24,7 @@ export default function EditAvatarPopup({ onUpdateAvatar, isOpen, onClose }) {
       onSubmit={handleSubmit}
       title={"Обновить Аватар"}
       name={"avatar-edit"}
-      buttonText={"Обновить"}
+      buttonText={isLoading ? "Обновление" : "Обновить"}
       children={
         <>
           <input
