@@ -1,9 +1,9 @@
 import {  useNavigate } from "react-router-dom"
-const navigate = useNavigate()
- const ProtectedRouteElement =  ({element: Component, ...props}) =>  {
 
+ const ProtectedRouteElement =  ({element: Component, ...props}) =>  {
+  const navigate = useNavigate();
   return ( 
-    props.loggedIn ? <Component {...props} /> : navigate('/sign-up') 
+    props.loggedIn ? <Component {...props} />: navigate('/sign-in') 
   )
 }
 

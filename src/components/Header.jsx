@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import headerLogo from "../images/headerLogo.svg";
 
 export default function Header() {
@@ -8,11 +8,11 @@ export default function Header() {
       <Routes>
         <Route
           path="sign-up"
-          element={<p className="header__caption">Регистрация</p>}
+          element={<Link to='../sign-in' className="header__caption">Войти</Link>}
         />
         <Route
           path="sign-in"
-          element={<p className="header__caption">Войти</p>}
+          element={<Link to='../sign-up' className="header__caption">Регистрация</Link>}
         />
       </Routes>
     </header>

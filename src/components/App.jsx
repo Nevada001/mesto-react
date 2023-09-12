@@ -13,7 +13,10 @@ import Card from "./Card";
 import AddPlacePopup from "./AddPlacePopup";
 import Login from "./Login";
 import Register from "./Register";
-// import ProtectedRoute from "./ProtectedRoute";
+import * as userAuth from '../utils/UserAuth'
+
+import ProtectedRouteElement from "./ProtectedRoute";
+import InfoTooltip from "./InfoTooltip";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +30,13 @@ function App() {
 
   const navigate = useNavigate();
   useEffect(() => {
+    //if (loggedIn) {
+    //   navigate("/");
+    // }
+    // else
+    //{
+    //   navigate("/sign-in");
+    //}
     api
       .getUserInfo()
       .then((userData) => {
@@ -46,6 +56,13 @@ function App() {
         console.log(`Sorry, ${err}`);
       });
   }, []);
+  function handleRegister({email, password}) {
+    return userAuth.register(email, password)
+    .then((res) => {
+      if (!res || res.stausCode === 400) throw new Error('Что-то пошло не так');
+      console.log(res);
+    })
+  }
 
   function handleUpdateUser(currentUser) {
     setIsLoading(true);
@@ -153,12 +170,12 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <div className="root">
           <div className="page">
+            <Header />
             <Routes>
               <Route
                 path="/sign-in"
                 element={
                   <>
-                    <Header />
                     <Login />
                   </>
                 }
@@ -167,32 +184,30 @@ function App() {
                 path="/sign-up"
                 element={
                   <>
-                    <Header />
-                    <Register />
+                    <Register onRegister={handleRegister}/>
                   </>
                 }
               />
+
               <Route
                 path="/"
                 element={
-                  <>
-                    <Header />
-                    <Main
-                      onEditProfile={handleEditProfileClick}
-                      onAddPlace={handleAddPlaceClick}
-                      onEditAvatar={handleEditAvatarClick}
-                      cards={cards.map((card) => (
-                        <Card
-                          card={card}
-                          key={card._id}
-                          onCardDelete={handleCardDelete}
-                          onCardLike={handleCardLike}
-                          onCardClick={handleCardClick}
-                        />
-                      ))}
-                    />{" "}
-                    <Footer />{" "}
-                  </>
+                  <ProtectedRouteElement
+                    element={Main}
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    onEditAvatar={handleEditAvatarClick}
+                    cards={cards.map((card) => (
+                      <Card
+                        card={card}
+                        key={card._id}
+                        onCardDelete={handleCardDelete}
+                        onCardLike={handleCardLike}
+                        onCardClick={handleCardClick}
+                      />
+                    ))}
+                    loggedIn={loggedIn}
+                  />
                 }
               />
 
@@ -234,6 +249,7 @@ function App() {
                 isOpen={selectedCard}
               />
             </Routes>
+            <Footer />
           </div>
         </div>
       </CurrentUserContext.Provider>
