@@ -6,15 +6,18 @@ import { api } from "../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import { useEffect, useState } from "react";
-import { AppContext, CurrentUserContext } from "../contexts/CurrentUserContext";
+import {
+  AppContext,
+  CurrentEmailContext,
+  CurrentUserContext,
+} from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import Card from "./Card";
 import AddPlacePopup from "./AddPlacePopup";
 import Login from "./Login";
 import Register from "./Register";
-import * as userAuth from '../utils/UserAuth'
-
+import * as userAuth from "../utils/UserAuth";
 import ProtectedRouteElement from "./ProtectedRoute";
 import InfoTooltip from "./InfoTooltip";
 
@@ -27,16 +30,26 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
-
+  const [userEmail, setUserEmail] = useState("");
   const navigate = useNavigate();
+
+  const tokenCheck = () => {
+    if (localStorage.getItem("jwt")) {
+      const jwt = localStorage.getItem("jwt");
+      userAuth.getContent(jwt).then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          navigate("/");
+          setUserEmail(res.data.email);
+        }
+      });
+    }
+  };
   useEffect(() => {
-    //if (loggedIn) {
-    //   navigate("/");
-    // }
-    // else
-    //{
-    //   navigate("/sign-in");
-    //}
+    tokenCheck();
+  }, [loggedIn, userEmail]);
+
+  useEffect(() => {
     api
       .getUserInfo()
       .then((userData) => {
@@ -56,12 +69,31 @@ function App() {
         console.log(`Sorry, ${err}`);
       });
   }, []);
-  function handleRegister({email, password}) {
-    return userAuth.register(email, password)
-    .then((res) => {
-      if (!res || res.stausCode === 400) throw new Error('Что-то пошло не так');
-      console.log(res);
-    })
+  function handleRegister({ email, password }) {
+    return userAuth.register(email, password).then((res) => {
+      if (!res || res.stausCode === 400) {
+        throw new Error("Что-то пошло не так");
+      } else {
+        navigate("/sign-in");
+      }
+    });
+  }
+
+  function handleLogin({ email, password }) {
+    if (!email || !password) {
+      return;
+    }
+    userAuth
+      .authorize(email, password)
+
+      .then((res) => {
+        console.log(res);
+        if (res.token) {
+          setLoggedIn(true);
+          localStorage.setItem("jwt", res.token);
+        }
+      })
+      .catch((err) => console.log(err));
   }
 
   function handleUpdateUser(currentUser) {
@@ -166,94 +198,96 @@ function App() {
   }
 
   return (
-    <AppContext.Provider value={isLoading}>
-      <CurrentUserContext.Provider value={currentUser}>
-        <div className="root">
-          <div className="page">
-            <Header />
-            <Routes>
-              <Route
-                path="/sign-in"
-                element={
-                  <>
-                    <Login />
-                  </>
-                }
-              />
-              <Route
-                path="/sign-up"
-                element={
-                  <>
-                    <Register onRegister={handleRegister}/>
-                  </>
-                }
-              />
+    <CurrentEmailContext.Provider value={userEmail}>
+      <AppContext.Provider value={isLoading}>
+        <CurrentUserContext.Provider value={currentUser}>
+          <div className="root">
+            <div className="page">
+              <Header email={userEmail} />
+              <Routes>
+                <Route
+                  path="/sign-in"
+                  element={
+                    <>
+                      <Login onLogin={handleLogin} />
+                    </>
+                  }
+                />
+                <Route
+                  path="/sign-up"
+                  element={
+                    <>
+                      <Register onRegister={handleRegister} />
+                    </>
+                  }
+                />
 
-              <Route
-                path="/"
-                element={
-                  <ProtectedRouteElement
-                    element={Main}
-                    onEditProfile={handleEditProfileClick}
-                    onAddPlace={handleAddPlaceClick}
-                    onEditAvatar={handleEditAvatarClick}
-                    cards={cards.map((card) => (
-                      <Card
-                        card={card}
-                        key={card._id}
-                        onCardDelete={handleCardDelete}
-                        onCardLike={handleCardLike}
-                        onCardClick={handleCardClick}
-                      />
-                    ))}
-                    loggedIn={loggedIn}
-                  />
-                }
-              />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRouteElement
+                      element={Main}
+                      onEditProfile={handleEditProfileClick}
+                      onAddPlace={handleAddPlaceClick}
+                      onEditAvatar={handleEditAvatarClick}
+                      cards={cards.map((card) => (
+                        <Card
+                          card={card}
+                          key={card._id}
+                          onCardDelete={handleCardDelete}
+                          onCardLike={handleCardLike}
+                          onCardClick={handleCardClick}
+                        />
+                      ))}
+                      loggedIn={loggedIn}
+                    />
+                  }
+                />
 
-              <Route
-                path="/"
-                element={EditProfilePopup}
-                onUpdateUser={handleUpdateUser}
-                isOpen={isEditProfilePopupOpen}
-                onClose={closeAllPopups}
-              />
+                <Route
+                  path="/"
+                  element={EditProfilePopup}
+                  onUpdateUser={handleUpdateUser}
+                  isOpen={isEditProfilePopupOpen}
+                  onClose={closeAllPopups}
+                />
 
-              <Route
-                path="/"
-                element={AddPlacePopup}
-                onAddPlace={handleAddPlaceSubmit}
-                onClose={closeAllPopups}
-                isOpen={isAddPlacePopupOpen}
-              />
-              <Route
-                path="/"
-                element={EditAvatarPopup}
-                onUpdateAvatar={handleUpdateAvatar}
-                onClose={closeAllPopups}
-                isOpen={isEditAvatarPopupOpen}
-              />
-              <Route
-                path="/"
-                element={PopupWithForm}
-                formName={"formDelete"}
-                title={"Вы уверены?"}
-                name={"delete"}
-                buttonText={"Да"}
-              />
-              <Route
-                path="/"
-                element={ImagePopup}
-                card={selectedCard}
-                onClose={closeAllPopups}
-                isOpen={selectedCard}
-              />
-            </Routes>
-            <Footer />
+                <Route
+                  path="/"
+                  element={AddPlacePopup}
+                  onAddPlace={handleAddPlaceSubmit}
+                  onClose={closeAllPopups}
+                  isOpen={isAddPlacePopupOpen}
+                />
+                <Route
+                  path="/"
+                  element={EditAvatarPopup}
+                  onUpdateAvatar={handleUpdateAvatar}
+                  onClose={closeAllPopups}
+                  isOpen={isEditAvatarPopupOpen}
+                />
+                <Route
+                  path="/"
+                  element={PopupWithForm}
+                  formName={"formDelete"}
+                  title={"Вы уверены?"}
+                  name={"delete"}
+                  buttonText={"Да"}
+                />
+                <Route
+                  path="/"
+                  element={ImagePopup}
+                  card={selectedCard}
+                  onClose={closeAllPopups}
+                  isOpen={selectedCard}
+                />
+              </Routes>
+              <Footer />
+            </div>
           </div>
-        </div>
-      </CurrentUserContext.Provider>
-    </AppContext.Provider>
+        </CurrentUserContext.Provider>
+      </AppContext.Provider>
+    </CurrentEmailContext.Provider>
   );
 }
 

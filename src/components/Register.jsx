@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+
 import * as UserAuth from "../utils/UserAuth";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -9,7 +9,9 @@ export default function Register({ onRegister }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    onRegister({ email, password });
+    onRegister({ email, password }).catch((err) => {
+      console.log( `Что-то пошло не так ${err}`)
+    })
   }
   return (
     <div className="login">
