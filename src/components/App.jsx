@@ -25,6 +25,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isInfoTooltipOpen, setisInfoTooltipOpen] = useState(false);
+  const [isInfoTooltipConfirm, setisInfoTooltipConfirm] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
@@ -71,10 +73,18 @@ function App() {
   }, []);
   function handleRegister({ email, password }) {
     return userAuth.register(email, password).then((res) => {
-      if (!res || res.stausCode === 400) {
+      console.log(res)
+      if (!res || res.message) {
+        setisInfoTooltipConfirm(false);
+        setisInfoTooltipOpen(true);
         throw new Error("Что-то пошло не так");
       } else {
+        setisInfoTooltipConfirm(true);
+        setisInfoTooltipOpen(true);
         navigate("/sign-in");
+        setTimeout(()=> {
+          closeAllPopups()
+        }, 2000)
       }
     });
   }
@@ -178,6 +188,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setisInfoTooltipOpen(false)
     setSelectedCard(null);
   }
 
@@ -243,46 +254,39 @@ function App() {
                     />
                   }
                 />
-
-                <Route
-                  path="/"
-                  element={EditProfilePopup}
-                  onUpdateUser={handleUpdateUser}
-                  isOpen={isEditProfilePopupOpen}
-                  onClose={closeAllPopups}
-                />
-
-                <Route
-                  path="/"
-                  element={AddPlacePopup}
-                  onAddPlace={handleAddPlaceSubmit}
-                  onClose={closeAllPopups}
-                  isOpen={isAddPlacePopupOpen}
-                />
-                <Route
-                  path="/"
-                  element={EditAvatarPopup}
-                  onUpdateAvatar={handleUpdateAvatar}
-                  onClose={closeAllPopups}
-                  isOpen={isEditAvatarPopupOpen}
-                />
-                <Route
-                  path="/"
-                  element={PopupWithForm}
-                  formName={"formDelete"}
-                  title={"Вы уверены?"}
-                  name={"delete"}
-                  buttonText={"Да"}
-                />
-                <Route
-                  path="/"
-                  element={ImagePopup}
-                  card={selectedCard}
-                  onClose={closeAllPopups}
-                  isOpen={selectedCard}
-                />
               </Routes>
               <Footer />
+              <EditProfilePopup
+                onUpdateUser={handleUpdateUser}
+                isOpen={isEditProfilePopupOpen}
+                onClose={closeAllPopups}
+              />
+              <AddPlacePopup
+                onAddPlace={handleAddPlaceSubmit}
+                onClose={closeAllPopups}
+                isOpen={isAddPlacePopupOpen}
+              />
+              <EditAvatarPopup
+                onUpdateAvatar={handleUpdateAvatar}
+                onClose={closeAllPopups}
+                isOpen={isEditAvatarPopupOpen}
+              />
+              <PopupWithForm
+                formName={"formDelete"}
+                title={"Вы уверены?"}
+                name={"delete"}
+                buttonText={"Да"}
+              />
+              <ImagePopup
+                card={selectedCard}
+                onClose={closeAllPopups}
+                isOpen={selectedCard}
+              />
+              <InfoTooltip
+                isOpen={isInfoTooltipOpen}
+                isConfirm={isInfoTooltipConfirm}
+                onClose={closeAllPopups}
+              />
             </div>
           </div>
         </CurrentUserContext.Provider>
