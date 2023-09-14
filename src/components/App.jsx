@@ -8,7 +8,6 @@ import ImagePopup from "./ImagePopup";
 import { useEffect, useState } from "react";
 import {
   AppContext,
-  CurrentEmailContext,
   CurrentUserContext,
 } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
@@ -226,7 +225,7 @@ function App() {
               email={userEmail}
             />
             <Routes>
-              <Route path="*" element={loggedIn ? navigate('/') : navigate('/sign-in')} /> 
+              
               <Route
                 path="/"
                 element={
