@@ -53,6 +53,7 @@ function App() {
   }, [loggedIn, userEmail]);
 
   useEffect(() => {
+    loggedIn ? navigate('/') : navigate('/sign-in');
     api
       .getUserInfo()
       .then((userData) => {
