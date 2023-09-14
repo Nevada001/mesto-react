@@ -5,12 +5,12 @@ import { CurrentEmailContext } from "../contexts/CurrentUserContext";
 
 
 
-export default function Header({email}) {
-  const currentUserEmail = useContext(CurrentEmailContext)
+export default function Header({email, outLogin, logOutCaption}) {
   return (
     <header className="header">
       <img className="header__logo" src={headerLogo} alt="Логотип проекта" />
-      <p className="header__caption">{email}</p>
+      <p className="header__email">{email}</p>
+      <Link to='/sign-in' onClick={outLogin} className="header__exitLink">{logOutCaption}</Link>
       <Routes>
         <Route
           path="sign-up"
