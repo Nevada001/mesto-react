@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -40,6 +41,7 @@ function App() {
       const jwt = localStorage.getItem("jwt");
       userAuth.getContent(jwt).then((res) => {
         if (res) {
+          console.log(res.data.email)
           setLoggedIn(true);
           navigate("/");
           setUserEmail(res.data.email);
