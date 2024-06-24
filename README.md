@@ -16,7 +16,7 @@
 
 ### Проект публичный и доступен по [ссылке](https://nevada001.github.io/mesto-react/).
 
-# Проект react-mesto-api-full
+
 
 
 
